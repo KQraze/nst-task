@@ -18,6 +18,7 @@
 }
 
 .date-range-slider__thumb {
+  z-index: 5;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -31,6 +32,7 @@
 }
 
 .date-range-slider__marks {
+  z-index: 3;
   position: absolute;
   width: 100%;
   display: flex;
@@ -43,4 +45,50 @@
 
 .date-range-slider__label--year {
   color: #333333;
+}
+
+.date-range-slider__tooltip {
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  transform: translateX(-45%);
+  padding: 6px 14px;
+  background: #ffffff;
+  color: #0167B3;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 133%;
+  text-align: center;
+  border-radius: 14px;
+  white-space: nowrap;
+  box-shadow: 0 5px 15px 0 rgba(14, 88, 143, 0.2);
+}
+
+.date-range-slider__tooltip--left {
+  bottom: 25px;
+}
+
+.date-range-slider__tooltip--left::after, .date-range-slider__tooltip--right::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  rotate: 45deg;
+  left: 50%;
+}
+
+.date-range-slider__tooltip--right::after {
+  top: 0;
+  translate: -50% -50%;
+}
+
+.date-range-slider__tooltip--left::after {
+  bottom: 0;
+  translate: -50% 50%;
+}
+
+.date-range-slider__tooltip--right {
+  top: 25px;
 }

@@ -1,17 +1,18 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   ElementRef,
   input,
   model,
   OnDestroy,
   OnInit,
   signal,
-  viewChild
+  viewChild, viewChildren
 } from '@angular/core';
 import { DateRangeMode } from '../date-range-switch/date-range-switch';
+import {NgClass} from '@angular/common';
 
 type MovementCallback = (elements: {
   firstThumb: HTMLDivElement,
@@ -26,7 +27,9 @@ type MovementCallback = (elements: {
 
 @Component({
   selector: 'date-range-slider',
-  imports: [],
+  imports: [
+    NgClass
+  ],
   templateUrl: './date-range-slider.html',
   styleUrl: './date-range-slider.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -39,10 +42,11 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   firstValue = model<Date>()
   secondValue = model<Date>()
 
-  sliderTrack = viewChild<ElementRef<HTMLDivElement>>('sliderTrack');
   firstThumb = viewChild<ElementRef<HTMLDivElement>>('firstThumb');
   secondThumb = viewChild<ElementRef<HTMLDivElement>>('secondThumb');
+  sliderTrack = viewChild<ElementRef<HTMLDivElement>>('sliderTrack');
   sliderRail = viewChild<ElementRef<HTMLDivElement>>('sliderRail');
+  sliderMarks = viewChildren<ElementRef<HTMLDivElement>>('sliderMark');
 
   activeThumb = signal<'firstThumb' | 'secondThumb' | null>(null);
 
@@ -60,7 +64,7 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   })
 
   constructor() {
-    effect(() => {
+    afterNextRender(() => {
       this.calcTrackPosition()
     })
   }
@@ -68,7 +72,7 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   onMouseMove = ({ clientX }: MouseEvent) => {
     if (!this.activeThumb()) return;
 
-    this.moveThumb(this.activeThumb()!, clientX);
+    this.moveThumb(clientX);
     this.calcTrackPosition()
   }
 
@@ -80,29 +84,32 @@ export class DateRangeSlider implements OnInit, OnDestroy {
     this.activeThumb.set(thumb)
   }
 
-  private moveThumb = (thumb: 'firstThumb' | 'secondThumb', clientX: number) => {
-    this.getElements(({ firstThumb, firstThumbRect, secondThumb, secondThumbRect, sliderRailRect }) => {
-      switch (thumb) {
-        case 'firstThumb':
-          // if (clientX - firstThumb.offsetWidth / 2 > secondThumbRect.left || sliderRailRect.left >= clientX - firstThumb.offsetWidth / 2) return;
-          if (clientX - firstThumb.offsetWidth / 2 > secondThumbRect.left) return;
+  private moveThumb = (clientX: number) => {
+    this.getElements(({ firstThumb, secondThumb, sliderRailRect }) => {
+      this.sliderMarks().forEach((mark, i, marks) => {
 
-          firstThumb.style.left = `${this.getPercentagePosition(clientX - firstThumb.offsetWidth / 2 - sliderRailRect.left)}%`;
-          break;
-        case 'secondThumb':
-          // if (clientX + firstThumb.offsetWidth / 2 < firstThumbRect.right || sliderRailRect.right <= clientX + secondThumb.offsetWidth / 2) return;
-          if (clientX + firstThumb.offsetWidth / 2 < firstThumbRect.right) return;
+        const getSliderMarkCenter = (mark: ElementRef<HTMLDivElement>) => {
+          const rect = mark.nativeElement.getBoundingClientRect();
+          return rect.left + rect.width / 2;
+        }
 
-          secondThumb.style.left = `${this.getPercentagePosition(clientX - secondThumb.offsetWidth / 2 - sliderRailRect.left)}%`;
-          break;
-      }
+        switch (this.activeThumb()) {
+          case 'firstThumb':
+            if (clientX > getSliderMarkCenter(mark)) console.log(i)
+            firstThumb.style.left = `${this.getPercentagePosition(clientX - firstThumb.offsetWidth / 2 - sliderRailRect.left)}%`;
+            break;
+          case 'secondThumb':
+            secondThumb.style.left = `${this.getPercentagePosition(clientX - secondThumb.offsetWidth / 2 - sliderRailRect.left)}%`;
+            break;
+        }
+      })
     })
   }
 
   private calcTrackPosition() {
-    this.getElements(({ firstThumbRect, secondThumbRect, sliderRailRect, sliderTrack }) => {
-      const firstThumbCenter = firstThumbRect.left + firstThumbRect.width / 2;
-      const secondThumbCenter = secondThumbRect.left + secondThumbRect.width / 2;
+    this.getElements(({ firstThumb, secondThumb, sliderRailRect, sliderTrack }) => {
+      const firstThumbCenter = this.getCenterOfElement(firstThumb);
+      const secondThumbCenter = this.getCenterOfElement(secondThumb);
 
       sliderTrack.style.left = `${this.getPercentagePosition(firstThumbCenter - sliderRailRect.left)}%`;
       sliderTrack.style.width = `${this.getPercentagePosition(secondThumbCenter - firstThumbCenter)}%`
@@ -117,6 +124,11 @@ export class DateRangeSlider implements OnInit, OnDestroy {
     })
 
     return value;
+  }
+
+  private getCenterOfElement(element: HTMLDivElement) {
+    const rect = element.getBoundingClientRect();
+    return rect.left + rect.width / 2;
   }
 
   private getElements(callback: MovementCallback) {

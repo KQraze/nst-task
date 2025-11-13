@@ -4,17 +4,27 @@
     #firstThumb
     (mousedown)="onMouseDown($event, 'firstThumb')"
     class="date-range-slider__thumb date-range-slider__thumb--first"
-  ></div>
+  >
+    <div class="date-range-slider__tooltip date-range-slider__tooltip--left">
+      <span>Июль</span>
+      <span>2025</span>
+    </div>
+  </div>
   <div
     #secondThumb
     (mousedown)="onMouseDown($event, 'secondThumb')"
     class="date-range-slider__thumb date-range-slider__thumb--second"
-  ></div>
+  >
+    <div class="date-range-slider__tooltip date-range-slider__tooltip--right">
+      <span>Сентябрь</span>
+      <span>2025</span>
+    </div>
+  </div>
   <div class="date-range-slider__marks">
     @for (mark of marks(); track mark) {
-      <div class="date-range-slider__tick">
+      <div #sliderMark class="date-range-slider__tick">
         @if (!mark.month) {
-          <span class="date-range-slider__label date-range-slider__label--year">
+          <span class="date-range-slider__label" [ngClass]="{ 'date-range-slider__label--year': dateRangeMode() === 'months' }">
             {{ mark.year }}
           </span>
         } @else if (dateRangeMode() === 'months') {
