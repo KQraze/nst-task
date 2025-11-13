@@ -1,32 +1,30 @@
-<div class="date-range-slider">
-  <div #sliderRail class="date-range-slider__rail">
-    <div #sliderTrack class="date-range-slider__track"></div>
-    <div
-      #firstThumb
-      (mousedown)="onMouseDown($event, 'firstThumb')"
-      class="date-range-slider__thumb date-range-slider__thumb--first"
-    ></div>
-    <div
-      #secondThumb
-      (mousedown)="onMouseDown($event, 'secondThumb')"
-      class="date-range-slider__thumb date-range-slider__thumb--second"
-    ></div>
-    <div class="date-range-slider__marks">
-      @for (mark of marks(); track mark) {
-        <div class="date-range-slider__tick">
-          @if (!mark.month) {
-            <span class="date-range-slider__label date-range-slider__label--year">
-              {{ mark.year }}
-            </span>
-          } @else if (viewMode() === 'months') {
-            <span class="date-range-slider__label">
-              {{ getMonthShort(mark.date) }}
-            </span>
-          } @else {
-            <span class="date-range-slider__label"></span>
-          }
-        </div>
-      }
-    </div>
+<div #sliderRail class="date-range-slider__rail">
+  <div #sliderTrack class="date-range-slider__track"></div>
+  <div
+    #firstThumb
+    (mousedown)="onMouseDown($event, 'firstThumb')"
+    class="date-range-slider__thumb date-range-slider__thumb--first"
+  ></div>
+  <div
+    #secondThumb
+    (mousedown)="onMouseDown($event, 'secondThumb')"
+    class="date-range-slider__thumb date-range-slider__thumb--second"
+  ></div>
+  <div class="date-range-slider__marks">
+    @for (mark of marks(); track mark) {
+      <div class="date-range-slider__tick">
+        @if (!mark.month) {
+          <span class="date-range-slider__label date-range-slider__label--year">
+            {{ mark.year }}
+          </span>
+        } @else if (dateRangeMode() === 'months') {
+          <span class="date-range-slider__label">
+            {{ getMonthShort(mark.date) }}
+          </span>
+        } @else {
+          <span class="date-range-slider__label"></span>
+        }
+      </div>
+    }
   </div>
 </div>

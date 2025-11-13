@@ -1,0 +1,17 @@
+.date-range-switch__item {
+  cursor: pointer;
+  font-weight: 600;
+  text-wrap: nowrap;
+  font-size: 14px;
+  color: #0167B3;
+  background: none;
+  border: none;
+  opacity: 0.5;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.date-range-switch__item--active {
+  opacity: 1;
+  text-decoration: none;
+}

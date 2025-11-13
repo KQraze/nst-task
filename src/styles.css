@@ -17,3 +17,21 @@ body {
   min-height: 100dvh;
   padding: 20px;
 }
+
+date-range {
+  display: flex;
+  align-items: center;
+  gap: 120px;
+  flex: 1;
+}
+
+date-range-slider {
+  user-select: none;
+  width: 100%;
+}
+
+date-range-switch {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

@@ -1,17 +1,15 @@
-import { Component, signal } from '@angular/core';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import { DateRangeSlider } from './date-range/date-range-slider/date-range-slider';
+import {DateRange} from './date-range/date-range';
 
 @Component({
   selector: 'app-root',
-  imports: [DateRangeSlider],
+  imports: [DateRange],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class App {
-  dateRange = signal({
-    firstValue: new Date(),
-    secondValue: new Date()
-  });
-
 
 }

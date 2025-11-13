@@ -1,0 +1,5 @@
+@for (item of dateRangeModes; track item) {
+  <button class="date-range-switch__item" [ngClass]="{ 'date-range-switch__item--active': value() === item }" (click)="setDateRangeMode(item)">
+    {{ item === 'years' ? 'Все года' : 'Месяца' }}
+  </button>
+}

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -10,8 +11,7 @@ import {
   signal,
   viewChild
 } from '@angular/core';
-
-type ViewMode = 'years' | 'months';
+import { DateRangeMode } from '../date-range-switch/date-range-switch';
 
 type MovementCallback = (elements: {
   firstThumb: HTMLDivElement,
@@ -29,12 +29,15 @@ type MovementCallback = (elements: {
   imports: [],
   templateUrl: './date-range-slider.html',
   styleUrl: './date-range-slider.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class DateRangeSlider implements OnInit, OnDestroy {
   minDate = input(new Date(2014, 0, 1));
   endDate = input(new Date(2016, 0, 1));
-  firstValue = model.required<Date>()
-  secondValue = model.required<Date>()
+  dateRangeMode = input<DateRangeMode>('years');
+  firstValue = model<Date>()
+  secondValue = model<Date>()
 
   sliderTrack = viewChild<ElementRef<HTMLDivElement>>('sliderTrack');
   firstThumb = viewChild<ElementRef<HTMLDivElement>>('firstThumb');
@@ -42,7 +45,6 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   sliderRail = viewChild<ElementRef<HTMLDivElement>>('sliderRail');
 
   activeThumb = signal<'firstThumb' | 'secondThumb' | null>(null);
-  viewMode = signal<ViewMode>('years');
 
   marks = computed(() => {
     const startYear = this.minDate().getFullYear();

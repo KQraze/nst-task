@@ -1,0 +1,6 @@
+<date-range-switch [(value)]="dateRangeMode" />
+<date-range-slider
+  [dateRangeMode]="dateRangeMode()"
+  [(firstValue)]="dateRange().firstValue"
+  [(secondValue)]="dateRange().secondValue"
+/>

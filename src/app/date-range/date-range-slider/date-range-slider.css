@@ -1,9 +1,3 @@
-.date-range-slider {
-  user-select: none;
-  width: 100%;
-  padding: 10px;
-}
-
 .date-range-slider__rail {
   position: relative;
   display: flex;
