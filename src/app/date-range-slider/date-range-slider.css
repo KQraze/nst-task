@@ -1,0 +1,52 @@
+.date-range-slider {
+  user-select: none;
+  width: 100%;
+  padding: 10px;
+}
+
+.date-range-slider__rail {
+  position: relative;
+  display: flex;
+  padding-inline: 2px;
+  height: 10px;
+  border-radius: 100px;
+  width: 100%;
+  background: #edf1f8;
+}
+
+.date-range-slider__track {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  border-radius: 100px;
+  background: #5cadea;
+}
+
+.date-range-slider__thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 5px solid #5cadea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.date-range-slider__marks {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #999999;
+}
+
+.date-range-slider__label--year {
+  color: #333333;
+}

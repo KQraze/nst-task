@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Raleway";
+  src: url("/fonts/Raleway-VariableFont_wght.ttf") format("truetype"),
+  url("/fonts/Raleway-VariableFont_wght.woff2") format("woff2");
+  font-weight: 100 900;
+}
+
+body {
+  font-family: "Raleway", sans-serif;
+  background: #E5E5E5;
+  min-height: 100dvh;
+  padding: 20px;
+}
