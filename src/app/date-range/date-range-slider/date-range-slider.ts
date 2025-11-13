@@ -13,11 +13,6 @@ import {
 
 type ViewMode = 'years' | 'months';
 
-interface DateRange {
-  start: Date;
-  end: Date;
-}
-
 type MovementCallback = (elements: {
   firstThumb: HTMLDivElement,
   secondThumb: HTMLDivElement,
@@ -30,14 +25,14 @@ type MovementCallback = (elements: {
 }) => void;
 
 @Component({
-  selector: 'app-date-range-slider',
+  selector: 'date-range-slider',
   imports: [],
   templateUrl: './date-range-slider.html',
   styleUrl: './date-range-slider.css',
 })
 export class DateRangeSlider implements OnInit, OnDestroy {
   minDate = input(new Date(2014, 0, 1));
-  endDate = input(new Date(2020, 0, 1));
+  endDate = input(new Date(2016, 0, 1));
   firstValue = model.required<Date>()
   secondValue = model.required<Date>()
 
@@ -149,13 +144,13 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   ngOnInit() {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
-    document.addEventListener('resize', () => this.calcTrackPosition());
+    window.addEventListener('resize', () => this.calcTrackPosition());
   }
 
   ngOnDestroy() {
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
-    document.removeEventListener('resize', () => this.calcTrackPosition());
+    window.removeEventListener('resize', () => this.calcTrackPosition());
   }
 }
 

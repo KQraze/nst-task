@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { DateRangeSlider } from './date-range-slider/date-range-slider';
+import { DateRangeSlider } from './date-range/date-range-slider/date-range-slider';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +12,6 @@ export class App {
     firstValue: new Date(),
     secondValue: new Date()
   });
+
+
 }
