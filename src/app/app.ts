@@ -16,6 +16,6 @@ export class App {
 
   dateRange = signal({
     firstValue: new Date(2014, 5, 1),
-    secondValue: new Date(2015, 11, 1)
+    secondValue: new Date(2014, 11, 1)
   });
 }

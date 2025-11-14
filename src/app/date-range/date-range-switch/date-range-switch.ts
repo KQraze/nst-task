@@ -1,16 +1,14 @@
 import {
   ChangeDetectionStrategy,
-  Component, model,
+  Component,
+  model
 } from '@angular/core';
-import { NgClass } from '@angular/common';
 
 export type DateRangeMode = 'years' | 'months';
 
 @Component({
   selector: 'date-range-switch',
-  imports: [
-    NgClass
-  ],
+  imports: [],
   templateUrl: './date-range-switch.html',
   styleUrl: './date-range-switch.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,4 +23,3 @@ export class DateRangeSwitch {
     this.value.set(mode);
   }
 }
-

@@ -24,7 +24,10 @@
     @for (mark of marks(); track mark) {
       <div #sliderMark class="date-range-slider__tick">
         @if (!mark.month) {
-          <span class="date-range-slider__label" [ngClass]="{ 'date-range-slider__label--year': dateRangeMode() === 'months' }">
+          <span
+            class="date-range-slider__label"
+            [class.date-range-slider__label--year]="dateRangeMode() === 'months'"
+          >
             {{ mark.year }}
           </span>
         } @else if (dateRangeMode() === 'months') {

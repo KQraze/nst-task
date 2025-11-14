@@ -6,15 +6,13 @@ import {
   ElementRef,
   input,
   model,
-  OnDestroy,
-  OnInit,
   signal,
   untracked,
   viewChild,
   viewChildren
 } from '@angular/core';
 import { DateRangeMode } from '../date-range-switch/date-range-switch';
-import { NgClass, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 
 type CallbackWithElements = (elements: {
   firstThumb: HTMLDivElement,
@@ -32,14 +30,18 @@ type ThumbType = 'firstThumb' | 'secondThumb';
 @Component({
   selector: 'date-range-slider',
   imports: [
-    NgClass,
     TitleCasePipe
   ],
   templateUrl: './date-range-slider.html',
   styleUrl: './date-range-slider.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:mousemove)': 'onMouseMove($event)',
+    '(document:mouseup)': 'onMouseUp()',
+    '(window:resize)': 'calcAllPositions()'
+  }
 })
-export class DateRangeSlider implements OnInit, OnDestroy {
+export class DateRangeSlider {
   minDate = input(new Date(2014, 0, 1));
   endDate = input(new Date(2016, 0, 1));
   dateRangeMode = input<DateRangeMode>('years');
@@ -55,30 +57,24 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   activeThumb = signal<ThumbType | null>(null);
 
   marks = computed(() => {
-    const startYear = this.minDate().getFullYear();
-    const endYear = this.endDate().getFullYear();
+    const start = this.minDate();
+    const end = this.endDate();
+    const marks: { date: Date; month: number; year: number }[] = [];
 
-    return Array.from({ length: endYear - startYear + 1 }, (_, i) => {
-      return Array.from({ length: 12 }, (_, j) => {
-        const date = new Date(startYear + i, j, 1);
+    for (let year = start.getFullYear(); year <= end.getFullYear(); year++) {
+      const minMonth = year === start.getFullYear() ? start.getMonth() : 0;
+      const maxMonth = year === end.getFullYear() ? end.getMonth() : 11;
 
-        return { date, month: date.getMonth(), year: date.getFullYear() };
-      }).filter(({ year, month }) => !(month && year === endYear));
-    }).flat();
+      for (let month = minMonth; month <= maxMonth; month++) {
+        marks.push({ date: new Date(year, month, 1), month, year });
+      }
+    }
+
+    return marks;
   });
 
-  private thumbPositionGetter = (type: 'firstValue' | 'secondValue') => {
-    return () => {
-      const index = this.marks().findIndex((mark) => {
-        return this[type]().getFullYear() === mark.year && this[type]().getMonth() === mark.month;
-      })
-
-      return index !== -1 ? index : 0;
-    }
-  }
-
-  firstThumbPosition = computed(this.thumbPositionGetter('firstValue'));
-  secondThumbPosition = computed(this.thumbPositionGetter('secondValue'))
+  firstThumbPosition = computed(() => this.getThumbPosition(this.firstValue()));
+  secondThumbPosition = computed(() => this.getThumbPosition(this.secondValue()));
 
   constructor() {
     afterRenderEffect(() => {
@@ -106,25 +102,47 @@ export class DateRangeSlider implements OnInit, OnDestroy {
     this.activeThumb.set(thumb)
   }
 
+  calcAllPositions() {
+    this.calcThumbPosition('firstThumb')
+    this.calcThumbPosition('secondThumb')
+    this.calcTrackPosition()
+  }
+
+  getMonthShort = (date: Date) => this.formatMonth(date, 'short');
+  getMonthLong = (date: Date) => this.formatMonth(date, 'long');
+
+  private getThumbPosition(value: Date): number {
+    const index = this.marks().findIndex(mark =>
+      value.getFullYear() === mark.year && value.getMonth() === mark.month
+    );
+    return index !== -1 ? index : 0;
+  }
+
   private moveThumbByClient = (clientX: number) => {
     this.getElements(({ firstThumb, secondThumb, firstThumbRect, secondThumbRect, sliderRailRect }) => {
-      switch (this.activeThumb()) {
-        case 'firstThumb':
-          if (clientX - firstThumb.offsetWidth / 2 > secondThumbRect.left || sliderRailRect.left >= clientX - firstThumb.offsetWidth / 2) return;
-          firstThumb.style.left = this.getPercentagePositionOfRail(clientX - firstThumb.offsetWidth / 2);
+      const halfThumbWidth = firstThumbRect.width / 2;
+      const newPosition = clientX - halfThumbWidth;
 
-          this.thumbIntersectingCallback('firstThumb', (_, index) => {
-            if (![this.firstThumbPosition(), this.secondThumbPosition()].includes(index)) this.firstValue.set(this.marks()[index].date);
-          })
-          break;
-        case 'secondThumb':
-          if (clientX + firstThumb.offsetWidth / 2 < firstThumbRect.right || sliderRailRect.right <= clientX + secondThumb.offsetWidth / 2) return;
-          secondThumb.style.left = this.getPercentagePositionOfRail(clientX - secondThumb.offsetWidth / 2);
+      if (this.activeThumb() === 'firstThumb') {
+        if (newPosition > secondThumbRect.left || sliderRailRect.left >= newPosition) return;
+        firstThumb.style.left = this.getPercentagePositionOfRail(newPosition);
 
-          this.thumbIntersectingCallback('secondThumb', (_, index) => {
-            if (![this.firstThumbPosition(), this.secondThumbPosition()].includes(index)) this.secondValue.set(this.marks()[index].date);
-          })
-          break;
+        this.updateThumbValue('firstThumb')
+        return;
+      }
+
+      if (clientX + halfThumbWidth < firstThumbRect.right || sliderRailRect.right <= clientX + halfThumbWidth) return;
+      secondThumb.style.left = this.getPercentagePositionOfRail(newPosition);
+
+      this.updateThumbValue('secondThumb')
+    })
+  }
+
+  private updateThumbValue = (thumb: ThumbType) => {
+    this.thumbIntersectingCallback(thumb, (_, index) => {
+      if (![this.firstThumbPosition(), this.secondThumbPosition()].includes(index)) {
+        const currentThumb = thumb === 'firstThumb' ? this.firstValue : this.secondValue;
+        currentThumb.set(this.marks()[index].date)
       }
     })
   }
@@ -150,12 +168,6 @@ export class DateRangeSlider implements OnInit, OnDestroy {
           break;
       }
     })
-  }
-
-  private calcAllPositions() {
-    this.calcThumbPosition('firstThumb')
-    this.calcThumbPosition('secondThumb')
-    this.calcTrackPosition()
   }
 
   private getPercentagePositionOfRail(position: number) {
@@ -195,44 +207,30 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   }
 
   private getElements(callback: CallbackWithElements) {
-    const firstThumb = this.firstThumb()?.nativeElement;
-    const secondThumb = this.secondThumb()?.nativeElement;
-    const sliderTrack = this.sliderTrack()?.nativeElement;
-    const sliderRail = this.sliderRail()?.nativeElement;
+    return untracked(() => {
+      const firstThumb = this.firstThumb()?.nativeElement;
+      const secondThumb = this.secondThumb()?.nativeElement;
+      const sliderTrack = this.sliderTrack()?.nativeElement;
+      const sliderRail = this.sliderRail()?.nativeElement;
 
-    if (!firstThumb || !secondThumb || !sliderTrack || !sliderRail) return;
+      if (!firstThumb || !secondThumb || !sliderTrack || !sliderRail) return;
 
-    return callback({
-      firstThumb,
-      secondThumb,
-      sliderTrack,
-      sliderRail,
-      firstThumbRect: firstThumb.getBoundingClientRect(),
-      secondThumbRect: secondThumb.getBoundingClientRect(),
-      sliderTrackRect: sliderTrack.getBoundingClientRect(),
-      sliderRailRect: sliderRail.getBoundingClientRect()
-    });
+      return callback({
+        firstThumb,
+        secondThumb,
+        sliderTrack,
+        sliderRail,
+        firstThumbRect: firstThumb.getBoundingClientRect(),
+        secondThumbRect: secondThumb.getBoundingClientRect(),
+        sliderTrackRect: sliderTrack.getBoundingClientRect(),
+        sliderRailRect: sliderRail.getBoundingClientRect()
+      });
+    })
   }
 
-  getMonthShort(date: Date) {
-    return new Intl.DateTimeFormat('ru', { month: 'short' }).format(date).slice(0, 3);
-  }
-
-  getMonthLong(date: Date) {
-    return new Intl.DateTimeFormat('ru', { month: 'long' }).format(date);
-  }
-
-
-  ngOnInit() {
-    document.addEventListener('mousemove', this.onMouseMove);
-    document.addEventListener('mouseup', this.onMouseUp);
-    window.addEventListener('resize', () => this.calcAllPositions());
-  }
-
-  ngOnDestroy() {
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    window.removeEventListener('resize', () => this.calcAllPositions());
+  private formatMonth(date: Date, style: 'short' | 'long'): string {
+    const formatted = new Intl.DateTimeFormat('ru', { month: style }).format(date);
+    return style === 'short' ? formatted.slice(0, 3) : formatted;
   }
 }
 
