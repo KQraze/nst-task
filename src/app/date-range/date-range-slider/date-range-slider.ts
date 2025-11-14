@@ -1,15 +1,17 @@
 import {
-  afterNextRender,
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
-  computed, effect,
+  computed,
   ElementRef,
   input,
   model,
   OnDestroy,
   OnInit,
   signal,
-  viewChild, viewChildren
+  untracked,
+  viewChild,
+  viewChildren
 } from '@angular/core';
 import { DateRangeMode } from '../date-range-switch/date-range-switch';
 import { NgClass, TitleCasePipe } from '@angular/common';
@@ -35,7 +37,7 @@ type ThumbType = 'firstThumb' | 'secondThumb';
   ],
   templateUrl: './date-range-slider.html',
   styleUrl: './date-range-slider.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangeSlider implements OnInit, OnDestroy {
   minDate = input(new Date(2014, 0, 1));
@@ -79,13 +81,13 @@ export class DateRangeSlider implements OnInit, OnDestroy {
   secondThumbPosition = computed(this.thumbPositionGetter('secondValue'))
 
   constructor() {
-    afterNextRender(() => {
-      this.calcAllPositions()
-    })
+    afterRenderEffect(() => {
+      this.dateRangeMode();
 
-    effect(() => {
-      console.log(this.dateRangeMode());
-    });
+      untracked(() => {
+        this.calcAllPositions();
+      });
+    })
   }
 
   onMouseMove = ({ clientX }: MouseEvent) => {
@@ -112,7 +114,7 @@ export class DateRangeSlider implements OnInit, OnDestroy {
           firstThumb.style.left = this.getPercentagePositionOfRail(clientX - firstThumb.offsetWidth / 2);
 
           this.thumbIntersectingCallback('firstThumb', (_, index) => {
-            if (this.firstThumbPosition() !== index) this.firstValue.set(this.marks()[index].date);
+            if (![this.firstThumbPosition(), this.secondThumbPosition()].includes(index)) this.firstValue.set(this.marks()[index].date);
           })
           break;
         case 'secondThumb':
@@ -120,7 +122,7 @@ export class DateRangeSlider implements OnInit, OnDestroy {
           secondThumb.style.left = this.getPercentagePositionOfRail(clientX - secondThumb.offsetWidth / 2);
 
           this.thumbIntersectingCallback('secondThumb', (_, index) => {
-            if (this.secondThumbPosition() !== index) this.secondValue.set(this.marks()[index].date);
+            if (![this.firstThumbPosition(), this.secondThumbPosition()].includes(index)) this.secondValue.set(this.marks()[index].date);
           })
           break;
       }
