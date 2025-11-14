@@ -21,7 +21,7 @@ body {
 date-range {
   display: flex;
   align-items: center;
-  gap: 120px;
+  gap: 8vw;
   height: 160px;
   flex: 1;
 }

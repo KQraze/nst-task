@@ -1,6 +1,8 @@
 <date-range-switch [(value)]="dateRangeMode" />
 <date-range-slider
+  [minDate]="minDate()"
+  [endDate]="endDate()"
   [dateRangeMode]="dateRangeMode()"
-  [(firstValue)]="dateRange().firstValue"
-  [(secondValue)]="dateRange().secondValue"
+  [(firstValue)]="firstValue"
+  [(secondValue)]="secondValue"
 />

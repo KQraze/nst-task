@@ -3,21 +3,21 @@
   <div
     #firstThumb
     (mousedown)="onMouseDown($event, 'firstThumb')"
-    class="date-range-slider__thumb date-range-slider__thumb--first"
+    class="date-range-slider__thumb"
   >
     <div class="date-range-slider__tooltip date-range-slider__tooltip--left">
-      <span>Июль</span>
-      <span>2025</span>
+      <span>{{ getMonthLong(firstValue()) | titlecase }}</span>
+      <span>{{ firstValue().getFullYear() }}</span>
     </div>
   </div>
   <div
     #secondThumb
     (mousedown)="onMouseDown($event, 'secondThumb')"
-    class="date-range-slider__thumb date-range-slider__thumb--second"
+    class="date-range-slider__thumb"
   >
     <div class="date-range-slider__tooltip date-range-slider__tooltip--right">
-      <span>Сентябрь</span>
-      <span>2025</span>
+      <span>{{ getMonthLong(secondValue()) | titlecase }}</span>
+      <span>{{ secondValue().getFullYear() }}</span>
     </div>
   </div>
   <div class="date-range-slider__marks">

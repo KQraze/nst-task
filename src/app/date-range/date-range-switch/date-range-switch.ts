@@ -19,7 +19,7 @@ export type DateRangeMode = 'years' | 'months';
 export class DateRangeSwitch {
   dateRangeModes: DateRangeMode[] = ['years', 'months'];
 
-  value = model<DateRangeMode>('years');
+  value = model<DateRangeMode>('months');
 
   setDateRangeMode(mode: DateRangeMode) {
     this.value.set(mode);

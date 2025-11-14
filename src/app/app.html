@@ -1,3 +1,8 @@
 <main class="app-container">
-  <date-range />
+  <date-range
+    [minDate]="minDate"
+    [endDate]="endDate"
+    [(firstValue)]="dateRange().firstValue"
+    [(secondValue)]="dateRange().secondValue"
+  />
 </main>
