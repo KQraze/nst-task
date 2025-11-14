@@ -20,5 +20,5 @@ export class DateRange {
   endDate = input(new Date(2016, 0, 1));
   firstValue = model.required<Date>();
   secondValue = model.required<Date>();
-  dateRangeMode = signal<DateRangeMode>('months');
+  dateRangeMode = signal<DateRangeMode>('years');
 }
