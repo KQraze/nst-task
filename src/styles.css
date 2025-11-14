@@ -22,7 +22,7 @@ date-range {
   display: flex;
   align-items: center;
   gap: 8vw;
-  height: 160px;
+  min-height: 160px;
   flex: 1;
 }
 

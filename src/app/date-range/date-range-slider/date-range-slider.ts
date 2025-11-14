@@ -98,7 +98,7 @@ export class DateRangeSlider {
     this.calcAllPositions()
   }
 
-  onMouseDown = (e: MouseEvent, thumb: ThumbType) => {
+  onMouseDown = (thumb: ThumbType) => {
     this.activeThumb.set(thumb)
   }
 
@@ -139,7 +139,7 @@ export class DateRangeSlider {
   }
 
   private updateThumbValue = (thumb: ThumbType) => {
-    this.thumbIntersectingCallback(thumb, (_, index) => {
+    this.thumbIntersectingCallback(thumb, (index) => {
       if (![this.firstThumbPosition(), this.secondThumbPosition()].includes(index)) {
         const currentThumb = thumb === 'firstThumb' ? this.firstValue : this.secondValue;
         currentThumb.set(this.marks()[index].date)
@@ -195,13 +195,13 @@ export class DateRangeSlider {
     return rect.left + rect.width / 2;
   }
 
-  private thumbIntersectingCallback(thumb: ThumbType, callback?: (mark: HTMLDivElement, i: number) => void) {
+  private thumbIntersectingCallback(thumb: ThumbType, callback?: (i: number) => void) {
     this.getElements(({ firstThumbRect, secondThumbRect }) => {
       const currentThumbRect = thumb === 'firstThumb' ? firstThumbRect : secondThumbRect;
 
       this.sliderMarks().forEach((mark, i) => {
         const markCenter = this.getCenter(mark.nativeElement)
-        if (currentThumbRect.left <= markCenter && currentThumbRect.right >= markCenter) callback?.(mark.nativeElement, i);
+        if (currentThumbRect.left <= markCenter && currentThumbRect.right >= markCenter) callback?.(i);
       })
     })
   }

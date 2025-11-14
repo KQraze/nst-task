@@ -1,18 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  model,
-  signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, signal } from '@angular/core';
 import { DateRangeSlider } from './date-range-slider/date-range-slider';
-import {DateRangeMode, DateRangeSwitch} from './date-range-switch/date-range-switch';
+import { DateRangeMode, DateRangeSwitch } from './date-range-switch/date-range-switch';
 
 @Component({
   selector: 'date-range',
   imports: [DateRangeSlider, DateRangeSwitch],
   templateUrl: './date-range.html',
-  styleUrl: './date-range.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRange {

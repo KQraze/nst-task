@@ -2,7 +2,7 @@
   <div #sliderTrack class="date-range-slider__track"></div>
   <div
     #firstThumb
-    (mousedown)="onMouseDown($event, 'firstThumb')"
+    (mousedown)="onMouseDown('firstThumb')"
     class="date-range-slider__thumb"
   >
     <div class="date-range-slider__tooltip date-range-slider__tooltip--left">
@@ -12,7 +12,7 @@
   </div>
   <div
     #secondThumb
-    (mousedown)="onMouseDown($event, 'secondThumb')"
+    (mousedown)="onMouseDown('secondThumb')"
     class="date-range-slider__thumb"
   >
     <div class="date-range-slider__tooltip date-range-slider__tooltip--right">
