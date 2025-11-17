@@ -159,16 +159,25 @@ export class DateRangeSlider {
 
   private calcThumbPosition = (thumb: ThumbType) => {
     this.getElements(({ firstThumb, secondThumb }) => {
-      switch (thumb) {
-        case 'firstThumb':
-          firstThumb.style.left = this.getPercentagePositionOfRail(this.getCenter(this.sliderMarks()[this.firstThumbPosition()].nativeElement) - firstThumb.offsetWidth / 2)
-          break;
-        case 'secondThumb':
-          secondThumb.style.left = this.getPercentagePositionOfRail(this.getCenter(this.sliderMarks()[this.secondThumbPosition()].nativeElement) - secondThumb.offsetWidth / 2)
-          break;
+      const isFirst = thumb === 'firstThumb';
+      const thumbElement = isFirst ? firstThumb : secondThumb;
+      const position = isFirst ? this.firstThumbPosition() : this.secondThumbPosition();
+      const marks = this.sliderMarks();
+
+      const isEdgeMark = isFirst ? position === 0 : position === this.marks().length - 1;
+
+      if (isEdgeMark) {
+        const markIndex = isFirst ? 0 : marks.length - 1;
+        const markRect = marks[markIndex].nativeElement.getBoundingClientRect();
+        const leftPosition = isFirst ? markRect.left : markRect.right - thumbElement.offsetWidth;
+        thumbElement.style.left = this.getPercentagePositionOfRail(leftPosition);
+        return;
       }
-    })
-  }
+
+      const markCenter = this.getCenter(marks[position].nativeElement);
+      thumbElement.style.left = this.getPercentagePositionOfRail(markCenter - thumbElement.offsetWidth / 2);
+    });
+  };
 
   private getPercentagePositionOfRail(position: number) {
     let value: number | undefined;
