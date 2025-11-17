@@ -92,3 +92,127 @@
 .date-range-slider__tooltip--right {
   top: 25px;
 }
+
+@media (max-width: 1024px) {
+  .date-range-slider__rail {
+    height: 8px;
+    padding-inline: 2px;
+  }
+
+  .date-range-slider__track {
+    height: 5px;
+  }
+
+  .date-range-slider__thumb {
+    width: 18px;
+    height: 18px;
+    border-width: 4px;
+  }
+
+  .date-range-slider__marks {
+    margin-top: 18px;
+    font-size: 13px;
+  }
+
+  .date-range-slider__tooltip {
+    padding: 5px 12px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  .date-range-slider__tooltip--left {
+    bottom: 23px;
+  }
+
+  .date-range-slider__tooltip--right {
+    top: 23px;
+  }
+
+  .date-range-slider__tooltip--left::after, .date-range-slider__tooltip--right::after {
+    width: 9px;
+    height: 9px;
+  }
+}
+
+@media (max-width: 768px) {
+  .date-range-slider__rail {
+    height: 6px;
+    padding-inline: 1px;
+  }
+
+  .date-range-slider__track {
+    height: 4px;
+  }
+
+  .date-range-slider__thumb {
+    width: 16px;
+    height: 16px;
+    border-width: 3px;
+  }
+
+  .date-range-slider__marks {
+    margin-top: 16px;
+    font-size: 12px;
+  }
+
+  .date-range-slider__tooltip {
+    padding: 4px 10px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .date-range-slider__tooltip--left {
+    bottom: 20px;
+  }
+
+  .date-range-slider__tooltip--right {
+    top: 20px;
+  }
+
+  .date-range-slider__tooltip--left::after, .date-range-slider__tooltip--right::after {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .date-range-slider__rail {
+    height: 5px;
+    padding-inline: 1px;
+  }
+
+  .date-range-slider__track {
+    height: 3px;
+  }
+
+  .date-range-slider__thumb {
+    width: 14px;
+    height: 14px;
+    border-width: 3px;
+  }
+
+  .date-range-slider__marks {
+    margin-top: 14px;
+    font-size: 11px;
+  }
+
+  .date-range-slider__tooltip {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  .date-range-slider__tooltip--left {
+    bottom: 18px;
+  }
+
+  .date-range-slider__tooltip--right {
+    top: 18px;
+  }
+
+  .date-range-slider__tooltip--left::after, .date-range-slider__tooltip--right::after {
+    width: 7px;
+    height: 7px;
+  }
+}
+

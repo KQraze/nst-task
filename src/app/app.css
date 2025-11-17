@@ -4,3 +4,16 @@
   width: 100%;
   padding-inline: 40px;
 }
+
+
+@media screen and (max-width: 1024px) {
+  .app-container {
+    padding-inline: 30px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .app-container {
+    font-size: 12px;
+  }
+}

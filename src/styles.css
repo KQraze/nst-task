@@ -36,3 +36,34 @@ date-range-switch {
   flex-direction: column;
   gap: 10px;
 }
+
+
+@media screen and (max-width: 1024px) {
+  body {
+    padding: 16px;
+  }
+
+  date-range {
+    gap: 6vw;
+    min-height: 140px;
+  }
+
+  date-range-switch {
+    gap: 8px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+
+  date-range {
+    gap: 4vw;
+    min-height: 120px;
+  }
+
+  date-range-switch {
+    gap: 6px;
+  }
+}

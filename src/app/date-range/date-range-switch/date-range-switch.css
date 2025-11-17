@@ -15,3 +15,15 @@
   opacity: 1;
   text-decoration: none;
 }
+
+@media screen and (max-width: 1024px) {
+  .date-range-switch__item {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .date-range-switch__item {
+    font-size: 10px;
+  }
+}
